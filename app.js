@@ -7,6 +7,8 @@ const Eventos = require('./models/Eventos');
 const Ofertas = require('./models/Ofertas');
 const sequelizeEventos = require('./config/eventos');
 const sequelizeOfertas = require('./config/ofertas');
+const sequelizeDoacoes = require('./config/doacoes');
+const Doacoes = require('./models/Doacoes');
 
 const app = express();
 const PORT = 3000;
@@ -26,7 +28,9 @@ sequelize.sync({ force: false }).then(() => {
   sequelizeOfertas.sync({ force: false }).then(() => {
     console.log('Ofertas synced!');
   });
-
+  sequelizeDoacoes.sync({ force: false }).then(() => {
+    console.log('Doacoes synced!');
+  });
 
 
 app.get('/index', async (req, res) => {
@@ -118,12 +122,12 @@ app.get('/cadastrooferta',async(req,res)=>{
   res.render('cadastrooferta');
 });
 app.post('/cadastrooferta', async (req, res) => {
-  const { tipo, endereco} = req.body;
+  const { Nome, endereco} = req.body;
 
   console.log("Dados recebidos:", req.body);  // Isso vai te ajudar a ver o que está sendo enviado para o backend
   
   try {
-    await Ofertas.create({ tipo, endereco });
+    await Ofertas.create({ Nome, endereco });
     res.redirect('/home');
   } catch (error) {
     console.error("Erro ao criar evento:", error);  // Mensagem detalhada no console
@@ -146,14 +150,38 @@ app.get('/editofertas/:id', async (req, res) => {
   res.render('editofertas', {oferta} );
 });
 app.post('/editofertas/:id', async (req, res) => {
-  const { tipo,  endereco } = req.body;
-  await Ofertas.update({ tipo, endereco}, { where: { id: req.params.id } });
+  const { Nome,  endereco } = req.body;
+  await Ofertas.update({ Nome, endereco}, { where: { id: req.params.id } });
   res.redirect('/listaofertas');
 });
 app.get('/deleteofertas/:id', async (req, res) => {
   await Ofertas.destroy({ where: { id: req.params.id } });
   res.redirect('/listaofertas');
 });
+
+app.get('/doaçoes',async(req,res)=>{
+  res.render('doaçoes');
+});
+app.post('/doaçoes', async (req, res) => {
+  const { Doaçao, Local} = req.body;
+
+  console.log("Dados recebidos:", req.body);
+});
+app.get('/editdoacoes/:id', async (req, res) => {
+  let doacao = await Doacoes.findByPk(req.params.id);
+  doacao = doacao.dataValues;
+  res.render('editdoacoes', {doacao} );
+});
+app.post('/editdoacoes/:id', async (req, res) => {
+  const { Doaçao,  Local } = req.body;
+  await Doacoes.update({ Doaçao, Local}, { where: { id: req.params.id } });
+  res.redirect('/listadoacoes');
+});
+app.get('/deletedoacoes/:id', async (req, res) => {
+  await Doacoes.destroy({ where: { id: req.params.id } });
+  res.redirect('/listadoacoes');
+});
+
 app.get('/entrar',async(req,res)=>{
   res.render('entrar');
 });
