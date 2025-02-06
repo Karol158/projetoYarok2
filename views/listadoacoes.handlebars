@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Id</th>
+      <th>Local</th>
+      
+      
+    </tr>
+  </thead>
+  <tbody>
+    {{#each doacoes}}
+    <tr>
+      <td>{{this.Doaçao}}</td>
+      <td>{{this.Local}}</td>
+      <td>{{this.id}}</td>
+      <td>
+        <a href="/editdoacoes/{{this.id}}">Editar</a>
+        <a href="/deletedoacoes/{{this.id}}" onclick="return confirm('Tem certeza?')">Excluir</a>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
