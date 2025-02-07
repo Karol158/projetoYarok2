@@ -122,12 +122,12 @@ app.get('/cadastrooferta',async(req,res)=>{
   res.render('cadastrooferta');
 });
 app.post('/cadastrooferta', async (req, res) => {
-  const { Nome, endereco} = req.body;
+  const {Tipo , endereco} = req.body;
 
   console.log("Dados recebidos:", req.body);  // Isso vai te ajudar a ver o que está sendo enviado para o backend
   
   try {
-    await Ofertas.create({ Nome, endereco });
+    await Ofertas.create({ Tipo , endereco });
     res.redirect('/home');
   } catch (error) {
     console.error("Erro ao criar evento:", error);  // Mensagem detalhada no console
@@ -150,8 +150,8 @@ app.get('/editofertas/:id', async (req, res) => {
   res.render('editofertas', {oferta} );
 });
 app.post('/editofertas/:id', async (req, res) => {
-  const { Nome,  endereco } = req.body;
-  await Ofertas.update({ Nome, endereco}, { where: { id: req.params.id } });
+  const { Tipo,  endereco } = req.body;
+  await Ofertas.update({ Tipo, endereco}, { where: { id: req.params.id } });
   res.redirect('/listaofertas');
 });
 app.get('/deleteofertas/:id', async (req, res) => {
@@ -159,13 +159,20 @@ app.get('/deleteofertas/:id', async (req, res) => {
   res.redirect('/listaofertas');
 });
 
-app.get('/doaçoes',async(req,res)=>{
-  res.render('doaçoes');
+app.get('/doacoes',async(req,res)=>{
+  res.render('doacoes');
 });
-app.post('/doaçoes', async (req, res) => {
-  const { Doaçao, Local} = req.body;
+app.post('/doacoes', async (req, res) => {
+  const { Doacao, Local} = req.body;
 
   console.log("Dados recebidos:", req.body);
+  try {
+    await Doacoes.create({ Doacao , Local });
+    res.redirect('/home');
+  } catch (error) {
+    console.error("Erro ao criar evento:", error);  // Mensagem detalhada no console
+    res.status(500).send(`Erro ao criar evento: ${error.message}`);  // Mostra o erro completo no navegador
+  }
 });
 app.get('/editdoacoes/:id', async (req, res) => {
   let doacao = await Doacoes.findByPk(req.params.id);
@@ -173,15 +180,24 @@ app.get('/editdoacoes/:id', async (req, res) => {
   res.render('editdoacoes', {doacao} );
 });
 app.post('/editdoacoes/:id', async (req, res) => {
-  const { Doaçao,  Local } = req.body;
-  await Doacoes.update({ Doaçao, Local}, { where: { id: req.params.id } });
+  const { Doacao,  Local } = req.body;
+  await Doacoes.update({ Doacao, Local}, { where: { id: req.params.id } });
   res.redirect('/listadoacoes');
 });
 app.get('/deletedoacoes/:id', async (req, res) => {
   await Doacoes.destroy({ where: { id: req.params.id } });
   res.redirect('/listadoacoes');
 });
-
+app.get('/listadoacoes', async (req, res) => {
+  try {
+    let doacoes = await Doacoes.findAll();
+    doacoes = doacoes.map((doacao) => doacao.dataValues); 
+    res.render('listadoacoes', { doacoes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erro ao buscar os eventos.');
+  }
+});
 app.get('/entrar',async(req,res)=>{
   res.render('entrar');
 });
@@ -189,7 +205,7 @@ app.get('/home',async(req,res)=>{
   res.render('home');
 });
 
-// Iniciar o servidor
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
