@@ -97,11 +97,11 @@ button:hover {
 <div class="form-container">
         <div class="form-section">
            <h5>Editar</h5>
-          <form action="/editdoacoes/{{evento.id}}" method="POST">
-  <label for="nome">Nome:</label>
-  <input type="text" id="nome" name="nome" value="{{evento.nome}}" required>
-  <label for="endereco">Endereco:</label>
-  <input type="text" id="endereco"name="endereco" value="{{evento.endereco}}" required>
+          <form action="/editdoacoes/{{doacao.id}}" method="POST">
+  <label for="Doacao">Doação:</label>
+  <input type="text" id="Doacao" name="Doacao" value="{{doacao.Doacao}}" required>
+  <label for="Local">Local:</label>
+  <input type="text" id="Local" name="Local" value="{{doacao.Local}}" required>
   <button type="submit">Salvar</button>
 
             </form>
